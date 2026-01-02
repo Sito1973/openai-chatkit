@@ -169,6 +169,6 @@ def parse_json(response: httpx.Response) -> Mapping[str, Any]:
 # Serve static files (frontend build) in production
 from fastapi.staticfiles import StaticFiles
 
-static_dir = os.path.join(os.path.dirname(__file__), "../../static")
+static_dir = os.path.join(os.path.dirname(__file__), "../static")
 if os.path.exists(static_dir):
     app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
