@@ -10,6 +10,10 @@ export function ChatKitPanel() {
 
   const chatkit = useChatKit({
     api: { getClientSecret },
+    composer: {
+      // Enable file attachments (images, PDFs, etc.)
+      attachments: { enabled: true },
+    },
   });
 
   return (
