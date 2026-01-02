@@ -5,16 +5,40 @@ interface LoginPageProps {
 
 export function LoginPage({ onLogin, error }: LoginPageProps) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-900 dark:to-slate-950">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-800">
-        <div className="mb-8 text-center">
-          <h1 className="mb-2 text-3xl font-bold text-slate-900 dark:text-white">
-            Bienvenido
-          </h1>
-          <p className="text-slate-600 dark:text-slate-400">
-            Inicia sesion para acceder al chat
-          </p>
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-amber-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900">
+      {/* Header */}
+      <header className="w-full border-b border-amber-200/50 bg-white/80 backdrop-blur-sm dark:border-slate-700/50 dark:bg-slate-900/80">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-4 px-4 py-4 sm:justify-start sm:px-6 lg:px-8">
+          <img
+            src="/logo.png"
+            alt="Cocinando Sonrisas Logo"
+            className="h-12 w-12 sm:h-14 sm:w-14"
+          />
+          <div className="text-center sm:text-left">
+            <h1 className="text-lg font-bold text-amber-600 sm:text-xl lg:text-2xl">
+              Agente Odoo
+            </h1>
+            <p className="text-sm font-medium tracking-wide text-slate-600 dark:text-slate-400 sm:text-base">
+              COCINANDO SONRISAS
+            </p>
+          </div>
         </div>
+      </header>
+
+      {/* Main content */}
+      <main className="flex flex-1 items-center justify-center p-4">
+        <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-800">
+          <div className="mb-8 text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+              <img src="/logo.png" alt="" className="h-10 w-10" />
+            </div>
+            <h2 className="mb-2 text-2xl font-bold text-slate-900 dark:text-white">
+              Bienvenido
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400">
+              Inicia sesion para acceder al asistente
+            </p>
+          </div>
 
         {error && (
           <div className="mb-6 rounded-lg bg-red-50 p-4 text-red-700 dark:bg-red-900/30 dark:text-red-400">
@@ -51,10 +75,11 @@ export function LoginPage({ onLogin, error }: LoginPageProps) {
           Continuar con Google
         </button>
 
-        <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-          Al iniciar sesion, aceptas nuestros terminos de uso
-        </p>
-      </div>
+          <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
+            Al iniciar sesion, aceptas nuestros terminos de uso
+          </p>
+        </div>
+      </main>
     </div>
   );
 }
