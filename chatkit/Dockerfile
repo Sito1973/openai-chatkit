@@ -1,4 +1,6 @@
+# Force git update
 # Build frontend
+
 FROM node:20-alpine as frontend-builder
 WORKDIR /app/frontend
 
