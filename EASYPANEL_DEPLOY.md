@@ -20,7 +20,7 @@ Esta opción utiliza los **Flujos de Trabajo Gestionados** (Managed Workflows) d
     *   (El Dockerfile se detectará automáticamente dentro de esa carpeta).
 4.  **Environment Variables**:
     *   `OPENAI_API_KEY`: `sk-...` (Tu clave de OpenAI).
-    *   `VITE_CHATKIT_WORKFLOW_ID`: `wf_...` (El ID de tu flujo de trabajo).
+    *   `CHATKIT_WORKFLOW_ID`: `wf_...` (El ID de tu flujo de trabajo).
 5.  **Deploy**: Haz clic en "Create" o "Deploy".
 
 ### ¿Cómo chatear?
@@ -64,6 +64,29 @@ Cambia las `instructions` o el `model` y vuelve a desplegar.
 
 ## Solución de Problemas
 
+### Verificar que el servidor funciona
+Visita `https://tu-app.easypanel.host/health` - deberías ver:
+```json
+{"status": "ok"}
+```
+
+### Problemas comunes
+
+*   **Pantalla negra o en blanco**:
+    1.  Verifica `/health` para confirmar que el servidor responde.
+    2.  Revisa que `CHATKIT_WORKFLOW_ID` esté configurado correctamente en Easypanel.
+    3.  Abre las DevTools del navegador (F12) y revisa la consola para ver errores de JavaScript.
+
 *   **Error 500 / Connection Failed**: Verifica que `OPENAI_API_KEY` sea correcta y tenga saldo.
-*   **Error "Missing workflow id" (Managed)**: Asegúrate de haber puesto la variable `VITE_CHATKIT_WORKFLOW_ID`.
-*   **Pantalla en blanco**: Revisa los logs de la aplicación en Easypanel. Si ves errores de `build`, asegúrate de que el Build Path sea correcto (`chatkit` o `managed-chatkit`).
+
+*   **Error "Missing workflow id" (Managed)**: Asegúrate de haber configurado la variable `CHATKIT_WORKFLOW_ID` en Easypanel.
+
+*   **Error "Missing OPENAI_API_KEY"**: Configura la variable `OPENAI_API_KEY` en Easypanel.
+
+### Variables de Entorno
+
+| Variable | Descripción | Requerida |
+|----------|-------------|-----------|
+| `OPENAI_API_KEY` | Tu clave de API de OpenAI | Sí |
+| `CHATKIT_WORKFLOW_ID` | ID del workflow (managed-chatkit) | Sí (managed) |
+| `ENVIRONMENT` | Establecer a `production` para cookies seguras | No |
