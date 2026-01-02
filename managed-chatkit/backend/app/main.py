@@ -158,9 +158,13 @@ def chatkit_api_base() -> str:
     )
 
 
-def parse_json(response: httpx.Response) -> Mapping[str, Any]:
-    try:
-        parsed = response.json()
-        return parsed if isinstance(parsed, Mapping) else {}
     except (json.JSONDecodeError, httpx.DecodingError):
         return {}
+
+
+# Serve static files (frontend build) in production
+from fastapi.staticfiles import StaticFiles
+
+static_dir = os.path.join(os.path.dirname(__file__), "../../static")
+if os.path.exists(static_dir):
+    app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
