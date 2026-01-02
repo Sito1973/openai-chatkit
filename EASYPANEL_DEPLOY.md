@@ -11,6 +11,7 @@ Esta opción utiliza los **Flujos de Trabajo Gestionados** (Managed Workflows) d
 ### Requisitos previos
 1.  Un **Workflow ID** creado en OpenAI Agent Builder.
 2.  Una **API Key** de OpenAI.
+3.  (Opcional) Credenciales de **Google OAuth** para autenticación.
 
 ### Pasos en Easypanel
 1.  Crea un nuevo **Service** (App) de tipo **App** (Build from Source / Github).
@@ -21,14 +22,30 @@ Esta opción utiliza los **Flujos de Trabajo Gestionados** (Managed Workflows) d
 4.  **Environment Variables**:
     *   `OPENAI_API_KEY`: `sk-...` (Tu clave de OpenAI).
     *   `CHATKIT_WORKFLOW_ID`: `wf_...` (El ID de tu flujo de trabajo).
+    *   `GOOGLE_CLIENT_ID`: (Opcional) Para autenticación con Google.
+    *   `GOOGLE_CLIENT_SECRET`: (Opcional) Para autenticación con Google.
+    *   `ENVIRONMENT`: `production` (Recomendado para cookies seguras).
 5.  **Deploy**: Haz clic en "Create" o "Deploy".
+
+### Configurar Autenticación con Google (Opcional)
+
+Para habilitar el login con Google:
+
+1.  Ve a [Google Cloud Console](https://console.cloud.google.com/)
+2.  Crea un proyecto y habilita "Google+ API"
+3.  Ve a "APIs & Services" → "Credentials" → "Create OAuth client ID"
+4.  Tipo: **Web application**
+5.  **Authorized JavaScript origins**: `https://tu-app.easypanel.host`
+6.  **Authorized redirect URIs**: `https://tu-app.easypanel.host/auth/callback/google`
+7.  Copia el Client ID y Client Secret a las variables de entorno en Easypanel
 
 ### ¿Cómo chatear?
 Una vez desplegado:
 1.  Abre la URL pública que te proporciona Easypanel (ej. `https://mi-app.easypanel.host`).
-2.  Verás la interfaz de chat.
-3.  Al escribir un mensaje, el frontend pedirá una sesión segura a tu propio backend (`/api/create-session`), el cual usará tus credenciales para conectar con OpenAI.
-4.  ¡Listo! Estás hablando con tu Agente configurado en OpenAI.
+2.  Si configuraste Google OAuth, verás una pantalla de login. Haz clic en "Continuar con Google".
+3.  Después de autenticarte, verás la interfaz de chat con tu nombre y foto.
+4.  Al escribir un mensaje, el frontend pedirá una sesión segura a tu propio backend (`/api/create-session`), el cual usará tus credenciales para conectar con OpenAI.
+5.  ¡Listo! Estás hablando con tu Agente configurado en OpenAI.
 
 ---
 
@@ -89,4 +106,7 @@ Visita `https://tu-app.easypanel.host/health` - deberías ver:
 |----------|-------------|-----------|
 | `OPENAI_API_KEY` | Tu clave de API de OpenAI | Sí |
 | `CHATKIT_WORKFLOW_ID` | ID del workflow (managed-chatkit) | Sí (managed) |
+| `GOOGLE_CLIENT_ID` | Client ID de Google OAuth | No |
+| `GOOGLE_CLIENT_SECRET` | Client Secret de Google OAuth | No |
 | `ENVIRONMENT` | Establecer a `production` para cookies seguras | No |
+| `AUTH_SECRET_KEY` | Clave secreta para firmar cookies (se genera automáticamente) | No |

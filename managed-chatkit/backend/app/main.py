@@ -12,6 +12,8 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from .auth import router as auth_router, get_user_from_cookie
+
 DEFAULT_CHATKIT_BASE = "https://api.openai.com"
 SESSION_COOKIE_NAME = "chatkit_session_id"
 SESSION_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30  # 30 days
@@ -26,6 +28,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include authentication routes
+app.include_router(auth_router)
+
 
 @app.get("/health")
 async def health() -> Mapping[str, str]:
@@ -35,6 +40,11 @@ async def health() -> Mapping[str, str]:
 @app.post("/api/create-session")
 async def create_session(request: Request) -> JSONResponse:
     """Exchange a workflow id for a ChatKit client secret."""
+    # Check authentication
+    user = get_user_from_cookie(request)
+    if not user:
+        return JSONResponse({"error": "Authentication required"}, status_code=401)
+
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         return respond({"error": "Missing OPENAI_API_KEY environment variable"}, 500)
@@ -44,7 +54,9 @@ async def create_session(request: Request) -> JSONResponse:
     if not workflow_id:
         return respond({"error": "Missing workflow id"}, 400)
 
-    user_id, cookie_value = resolve_user(request.cookies)
+    # Use authenticated user's email as user_id for ChatKit session
+    user_id = user.get("email") or user.get("id") or str(uuid.uuid4())
+    cookie_value: str | None = None
     api_base = chatkit_api_base()
 
     try:
