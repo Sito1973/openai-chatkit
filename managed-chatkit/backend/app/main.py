@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import uuid
 from typing import Any, Mapping
@@ -14,11 +15,25 @@ from fastapi.responses import JSONResponse
 
 from .auth import router as auth_router, get_user_from_cookie
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 DEFAULT_CHATKIT_BASE = "https://api.openai.com"
 SESSION_COOKIE_NAME = "chatkit_session_id"
 SESSION_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30  # 30 days
 
 app = FastAPI(title="Managed ChatKit Session API")
+
+# Log environment variables at startup (redacted for security)
+@app.on_event("startup")
+async def log_startup_info():
+    workflow_id = os.getenv("CHATKIT_WORKFLOW_ID") or os.getenv("VITE_CHATKIT_WORKFLOW_ID")
+    openai_key = os.getenv("OPENAI_API_KEY")
+    logger.info(f"CHATKIT_WORKFLOW_ID set: {bool(workflow_id)}")
+    logger.info(f"OPENAI_API_KEY set: {bool(openai_key)}")
+    if workflow_id:
+        logger.info(f"Workflow ID starts with: {workflow_id[:10]}...")
 
 app.add_middleware(
     CORSMiddleware,
@@ -35,6 +50,18 @@ app.include_router(auth_router)
 @app.get("/health")
 async def health() -> Mapping[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/debug/env")
+async def debug_env() -> Mapping[str, Any]:
+    """Debug endpoint to check environment variable status (values are hidden for security)."""
+    return {
+        "CHATKIT_WORKFLOW_ID_set": bool(os.getenv("CHATKIT_WORKFLOW_ID")),
+        "CHATKIT_WORKFLOW_ID_value": os.getenv("CHATKIT_WORKFLOW_ID", "NOT_SET")[:15] + "..." if os.getenv("CHATKIT_WORKFLOW_ID") else "NOT_SET",
+        "VITE_CHATKIT_WORKFLOW_ID_set": bool(os.getenv("VITE_CHATKIT_WORKFLOW_ID")),
+        "OPENAI_API_KEY_set": bool(os.getenv("OPENAI_API_KEY")),
+        "all_env_keys": [k for k in os.environ.keys() if "CHATKIT" in k or "OPENAI" in k or "GOOGLE" in k],
+    }
 
 
 @app.post("/api/create-session")
@@ -159,9 +186,18 @@ def resolve_workflow_id(body: Mapping[str, Any]) -> str | None:
     if isinstance(workflow, Mapping):
         workflow_id = workflow.get("id")
     workflow_id = workflow_id or body.get("workflowId")
+
+    # Check environment variables
     env_workflow = os.getenv("CHATKIT_WORKFLOW_ID") or os.getenv(
         "VITE_CHATKIT_WORKFLOW_ID"
     )
+
+    # Debug logging
+    logger.info(f"resolve_workflow_id: body workflow_id={workflow_id}")
+    logger.info(f"resolve_workflow_id: env CHATKIT_WORKFLOW_ID={os.getenv('CHATKIT_WORKFLOW_ID')}")
+    logger.info(f"resolve_workflow_id: env VITE_CHATKIT_WORKFLOW_ID={os.getenv('VITE_CHATKIT_WORKFLOW_ID')}")
+    logger.info(f"resolve_workflow_id: env_workflow={env_workflow}")
+
     if not workflow_id and env_workflow:
         workflow_id = env_workflow
     if workflow_id and isinstance(workflow_id, str) and workflow_id.strip():
