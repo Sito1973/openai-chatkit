@@ -56,8 +56,23 @@ async def create_session(request: Request) -> JSONResponse:
 
     # Use authenticated user's email as user_id for ChatKit session
     user_id = user.get("email") or user.get("id") or str(uuid.uuid4())
+    # Get user name from body or auth cookie
+    user_name = body.get("userName") or user.get("name") or ""
     cookie_value: str | None = None
     api_base = chatkit_api_base()
+
+    # Build session payload with user context for the agent
+    session_payload: dict[str, Any] = {
+        "workflow": {"id": workflow_id},
+        "user": user_id,
+    }
+
+    # Add context with user name so the agent can greet them
+    if user_name:
+        session_payload["context"] = {
+            "user_name": user_name,
+            "greeting": f"El usuario se llama {user_name}. Saludalo por su nombre."
+        }
 
     try:
         async with httpx.AsyncClient(base_url=api_base, timeout=10.0) as client:
@@ -68,7 +83,7 @@ async def create_session(request: Request) -> JSONResponse:
                     "OpenAI-Beta": "chatkit_beta=v1",
                     "Content-Type": "application/json",
                 },
-                json={"workflow": {"id": workflow_id}, "user": user_id},
+                json=session_payload,
             )
     except httpx.RequestError as error:
         return respond(

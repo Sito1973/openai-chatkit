@@ -23,15 +23,19 @@ export const workflowId: string | null = (() => {
 
 export function createClientSecretFetcher(
   workflow: string | null,
-  endpoint = "/api/create-session"
+  endpoint = "/api/create-session",
+  userName?: string
 ) {
   return async (currentSecret: string | null) => {
     if (currentSecret) return currentSecret;
 
-    // Build request body - only include workflow if we have an ID
+    // Build request body - include workflow and user name if available
     const body: Record<string, unknown> = {};
     if (workflow) {
       body.workflow = { id: workflow };
+    }
+    if (userName) {
+      body.userName = userName;
     }
 
     const response = await fetch(endpoint, {

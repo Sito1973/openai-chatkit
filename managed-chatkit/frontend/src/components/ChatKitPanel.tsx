@@ -2,10 +2,14 @@ import { useMemo } from "react";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import { createClientSecretFetcher, workflowId } from "../lib/chatkitSession";
 
-export function ChatKitPanel() {
+interface ChatKitPanelProps {
+  userName?: string;
+}
+
+export function ChatKitPanel({ userName }: ChatKitPanelProps) {
   const getClientSecret = useMemo(
-    () => createClientSecretFetcher(workflowId),
-    []
+    () => createClientSecretFetcher(workflowId, "/api/create-session", userName),
+    [userName]
   );
 
   const chatkit = useChatKit({
@@ -17,7 +21,7 @@ export function ChatKitPanel() {
   });
 
   return (
-    <div className="flex h-[90vh] w-full rounded-2xl bg-white shadow-sm transition-colors dark:bg-slate-900">
+    <div className="flex h-full w-full overflow-hidden rounded-xl bg-white shadow-lg transition-colors dark:bg-slate-900 sm:rounded-2xl">
       <ChatKit control={chatkit.control} className="h-full w-full" />
     </div>
   );
