@@ -88,13 +88,10 @@ export default function App() {
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-2 sm:p-4">
         <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col overflow-hidden">
           {/* Welcome message - smaller on mobile */}
-          <div className="mb-2 flex-shrink-0 text-center sm:mb-4">
-            <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 sm:text-2xl">
+          <div className="mb-2 flex-shrink-0 text-center sm:mb-3">
+            <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 sm:text-xl">
               Bienvenido, <span className="text-amber-600">{user?.name?.split(" ")[0]}</span>
             </h2>
-            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400 sm:mt-1 sm:text-sm">
-              Soy tu asistente virtual. ¿En que puedo ayudarte hoy?
-            </p>
           </div>
           <div className="min-h-0 flex-1">
             <ChatKitPanel userName={user?.name || undefined} />
