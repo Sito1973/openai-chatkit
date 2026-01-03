@@ -13,6 +13,8 @@ export function LoginPage({ onLogin, error }: LoginPageProps) {
             src="/logo.png"
             alt="Cocinando Sonrisas Logo"
             className="h-10 w-10 sm:h-14 sm:w-14"
+            loading="eager"
+            fetchPriority="high"
           />
           <div className="text-center sm:text-left">
             <h1 className="text-base font-bold text-amber-600 sm:text-xl lg:text-2xl">
@@ -30,7 +32,7 @@ export function LoginPage({ onLogin, error }: LoginPageProps) {
         <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-xl dark:bg-slate-800 sm:rounded-2xl sm:p-8">
           <div className="mb-6 text-center sm:mb-8">
             <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30 sm:mb-4 sm:h-16 sm:w-16">
-              <img src="/logo.png" alt="" className="h-8 w-8 sm:h-10 sm:w-10" />
+              <img src="/logo.png" alt="" className="h-8 w-8 sm:h-10 sm:w-10" loading="eager" />
             </div>
             <h2 className="mb-1 text-xl font-bold text-slate-900 dark:text-white sm:mb-2 sm:text-2xl">
               Bienvenido
