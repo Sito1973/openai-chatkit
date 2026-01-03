@@ -54,6 +54,7 @@ export function ChatKitPanel({ userName, theme = "system" }: ChatKitPanelProps) 
         control={chatkit.control}
         className="h-full w-full"
         theme={resolvedTheme}
+        locale="es"
       />
     </div>
   );
