@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import { createClientSecretFetcher, workflowId } from "../lib/chatkitSession";
 
@@ -6,9 +6,25 @@ interface ChatKitPanelProps {
   userName?: string;
 }
 
-// ChatKit options for customization
+// Hook to detect system color scheme (dark/light)
+function useSystemTheme(): "dark" | "light" {
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof window === "undefined") return "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e: MediaQueryListEvent) => setTheme(e.matches ? "dark" : "light");
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+
+  return theme;
+}
+
+// ChatKit options for customization (theme is dynamic, set in component)
 const chatKitOptions = {
-  theme: "dark" as const,
   composer: {
     attachments: { enabled: true },
     placeholder: "Escribe tu mensaje...",
@@ -31,6 +47,8 @@ const chatKitOptions = {
 };
 
 export function ChatKitPanel({ userName }: ChatKitPanelProps) {
+  const systemTheme = useSystemTheme();
+
   const getClientSecret = useMemo(
     () => createClientSecretFetcher(workflowId, "/api/create-session", userName),
     [userName]
@@ -41,10 +59,12 @@ export function ChatKitPanel({ userName }: ChatKitPanelProps) {
     console.log("[ChatKitPanel] Initializing with options:", chatKitOptions);
     console.log("[ChatKitPanel] workflowId:", workflowId);
     console.log("[ChatKitPanel] userName:", userName);
-  }, [userName]);
+    console.log("[ChatKitPanel] systemTheme:", systemTheme);
+  }, [userName, systemTheme]);
 
   const chatkit = useChatKit({
     api: { getClientSecret },
+    theme: systemTheme,
     ...chatKitOptions,
   });
 
