@@ -47,7 +47,7 @@ export default function App() {
             />
             <div>
               <h1 className="text-sm font-bold text-amber-600 sm:text-lg">
-                Agente Odoo
+                Asistente IA COCSON
               </h1>
               <p className="hidden text-xs font-medium tracking-wide text-slate-500 dark:text-slate-400 xs:block sm:text-sm">
                 COCINANDO SONRISAS

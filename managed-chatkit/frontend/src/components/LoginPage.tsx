@@ -18,7 +18,7 @@ export function LoginPage({ onLogin, error }: LoginPageProps) {
           />
           <div className="text-center sm:text-left">
             <h1 className="text-base font-bold text-amber-600 sm:text-xl lg:text-2xl">
-              Agente Odoo
+              Asistente IA COCSON
             </h1>
             <p className="text-xs font-medium tracking-wide text-slate-600 dark:text-slate-400 sm:text-base">
               COCINANDO SONRISAS
