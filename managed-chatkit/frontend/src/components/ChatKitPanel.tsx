@@ -17,14 +17,14 @@ const chatKitOptions = {
     greeting: "¿En qué puedo ayudarte hoy?",
     prompts: [
       {
-        name: "Ventas por fecha",
+        label: "Ventas por fecha",
         prompt: "Buscar ventas de una fecha específica",
         icon: "search",
       },
       {
-        name: "Asistencia",
+        label: "Asistencia",
         prompt: "Consultar registros de entrada y salida de un colaborador",
-        icon: "users",
+        icon: "search",
       },
     ],
   },
