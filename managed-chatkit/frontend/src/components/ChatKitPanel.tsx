@@ -19,12 +19,12 @@ const chatKitOptions = {
       {
         label: "Ventas por fecha",
         prompt: "Buscar ventas de una fecha específica",
-        icon: "search",
+        icon: "chart",
       },
       {
         label: "Asistencia",
         prompt: "Consultar registros de entrada y salida de un colaborador",
-        icon: "search",
+        icon: "user",
       },
     ],
   },
