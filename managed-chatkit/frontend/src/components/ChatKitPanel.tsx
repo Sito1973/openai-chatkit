@@ -22,7 +22,7 @@ const chatKitOptions = {
         icon: "chart",
       },
       {
-        label: "Asistencia",
+        label: "Buscar Registros control de acceso",
         prompt: "Consultar registros de entrada y salida de un colaborador",
         icon: "user",
       },
