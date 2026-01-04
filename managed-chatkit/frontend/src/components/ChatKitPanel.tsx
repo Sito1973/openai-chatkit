@@ -14,8 +14,25 @@ export function ChatKitPanel({ userName }: ChatKitPanelProps) {
 
   const chatkit = useChatKit({
     api: { getClientSecret },
+    theme: "dark",
     composer: {
       attachments: { enabled: true },
+      placeholder: "Escribe tu mensaje...",
+    },
+    startScreen: {
+      greeting: "¿En qué puedo ayudarte hoy?",
+      prompts: [
+        {
+          name: "Ventas por fecha",
+          prompt: "Buscar ventas de una fecha específica",
+          icon: "search",
+        },
+        {
+          name: "Asistencia",
+          prompt: "Consultar registros de entrada y salida de un colaborador",
+          icon: "users",
+        },
+      ],
     },
   });
 
