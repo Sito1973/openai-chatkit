@@ -42,20 +42,37 @@ export function ChatKitPanel({ userName, theme = "system" }: ChatKitPanelProps) 
 
   const chatkit = useChatKit({
     api: { getClientSecret },
-    composer: {
-      // Enable file attachments (images, PDFs, etc.)
-      attachments: { enabled: true },
+    theme: {
+      colorScheme: resolvedTheme,
     },
+    composer: {
+      attachments: {
+        enabled: true,
+        maxCount: 5,
+        maxSize: 10485760,
+      },
+    },
+    startScreen: {
+      greeting: "¿En qué puedo ayudarte hoy?",
+      prompts: [
+        {
+          icon: "chart-line",
+          label: "Ventas por fecha",
+          prompt: "Buscar ventas de una fecha específica",
+        },
+        {
+          icon: "users",
+          label: "Asistencia",
+          prompt: "Consultar registros de entrada y salida de un colaborador",
+        },
+      ],
+    },
+    locale: "es",
   });
 
   return (
     <div className="flex h-full w-full overflow-hidden rounded-xl shadow-lg transition-colors sm:rounded-2xl">
-      <ChatKit
-        control={chatkit.control}
-        className="h-full w-full"
-        theme={resolvedTheme}
-        locale="es"
-      />
+      <ChatKit control={chatkit.control} className="h-full w-full" />
     </div>
   );
 }
